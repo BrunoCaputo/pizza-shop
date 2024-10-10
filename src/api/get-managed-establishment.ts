@@ -1,6 +1,6 @@
 import { api } from '@/lib/axios'
 
-interface GetManagedEstablishmentResponse {
+export interface GetManagedEstablishmentResponse {
   id: string
   name: string
   createdAt: Date | null

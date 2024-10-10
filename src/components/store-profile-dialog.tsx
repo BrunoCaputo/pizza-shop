@@ -1,10 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
-import { getManagedEstablishment } from '@/api/get-managed-establishment'
+import {
+  getManagedEstablishment,
+  GetManagedEstablishmentResponse,
+} from '@/api/get-managed-establishment'
 import { updateProfile } from '@/api/update-profile'
 
 import { Button } from './ui/button'
@@ -28,6 +31,8 @@ const storeProfileSchema = z.object({
 type StoreProfileSchema = z.infer<typeof storeProfileSchema>
 
 export function StoreProfileDialog() {
+  const queryClient = useQueryClient()
+
   const { data: managedEstablishment } = useQuery({
     queryKey: ['managed-establishment'],
     queryFn: getManagedEstablishment,
@@ -48,6 +53,23 @@ export function StoreProfileDialog() {
 
   const { mutateAsync: updateProfileFn } = useMutation({
     mutationFn: updateProfile,
+    onSuccess(_, { name, description }) {
+      const cached = queryClient.getQueryData<GetManagedEstablishmentResponse>([
+        'managed-establishment',
+      ])
+
+      if (cached) {
+        queryClient.setQueryData<GetManagedEstablishmentResponse>(
+          ['managed-establishment'],
+          {
+            ...cached,
+            name,
+            description,
+          },
+        )
+      }
+      console.log(cached)
+    },
   })
 
   async function handleUpdateProfile({
