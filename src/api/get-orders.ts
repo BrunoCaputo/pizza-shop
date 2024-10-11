@@ -1,11 +1,5 @@
+import { OrderStatus } from '@/components/order-status'
 import { api } from '@/lib/axios'
-
-type OrderStatus =
-  | 'pending'
-  | 'canceled'
-  | 'processing'
-  | 'delivering'
-  | 'delivered'
 
 export interface GetOrdersQuery {
   pageIndex?: number | null
