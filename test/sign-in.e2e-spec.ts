@@ -35,5 +35,5 @@ test('navigate to new restaurant page', async ({ page }) => {
 
   expect(page.url()).toContain('/sign-up')
 
-  await page.waitForTimeout(2000)
+  await page.waitForTimeout(1000)
 })
